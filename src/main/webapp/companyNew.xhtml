@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:a4j="http://richfaces.org/a4j"
+       xmlns:rich="http://richfaces.org/rich">
+      
+<h:head>
+<title> Nueva Compañia</title>
+</h:head>
+<h:body>
+
+	<h:form id="form">
+		<rich:panel>
+			<f:facet name="header">
+			<h:outputLabel value="Agregar nueva Empresa" />
+			</f:facet>
+			<h:panelGrid columns="3" >
+				<h:outputText value="Nombre" />
+				<h:inputText value="#{companyDao.entity.name}" size="35" id="name">
+				<rich:validator />
+				</h:inputText>
+				<rich:message for="name" />
+				<h:outputText value="Descripcion" />
+				<h:inputTextarea value="#{companyDao.entity.description}" rows="3" cols="40" id="description">
+					<rich:validator />
+				</h:inputTextarea>
+				<rich:message for="description" />
+			</h:panelGrid>
+			<a4j:commandButton action="#{companyDao.create()}" render="tabla" value="Grabar"></a4j:commandButton>
+		</rich:panel>
+	</h:form>
+	
+	<rich:panel>
+		<f:facet name="header">
+			<h:outputText value="Listado de Empresas" />
+		</f:facet>
+		<rich:dataTable value="#{companyDao.listAll()}"  var="datos" rows="10" id="tabla" >
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Id" />
+				</f:facet>
+				<h:outputLabel value="#{datos.id}"/>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Nombre" />
+				</f:facet>
+				<rich:inplaceInput  value="#{datos.name}" />
+				
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Descripción" />
+				</f:facet>
+				<rich:inplaceInput value="#{datos.description}" />
+			</h:column>
+            <f:facet name="footer">
+                <rich:dataScroller id="scroller" />
+            </f:facet>
+		</rich:dataTable>
+	</rich:panel>
+
+</h:body>
+</ui:composition>
