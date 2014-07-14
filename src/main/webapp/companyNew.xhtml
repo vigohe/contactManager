@@ -49,7 +49,9 @@
 				<f:facet name="header">
 					<h:outputText value="Nombre" />
 				</f:facet>
-				<rich:inplaceInput  value="#{datos.name}" />
+				<rich:inplaceInput  value="#{datos.name}" >
+				<a4j:ajax event="change" listener="#{companyDao.update(datos.id)}" />  
+				</rich:inplaceInput>
 				
 			</h:column>
 			<h:column>

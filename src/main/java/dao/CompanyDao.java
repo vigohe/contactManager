@@ -67,39 +67,42 @@ public class CompanyDao {
 		}
 	}
 
-	public void update() {
-		System.out.println("CompanyDao: Actualizando la compañia.");
+	public void update(int id) {
+		System.out.println("CompanyDao: Actualizando la compañia.id: "+ id);
+		entity = this.findById(id);
+		System.out.println(entity.getId() +"," + entity.getName()+"," + entity.getDescription() );
+		
 	/*	for( Company comp  :  listaCompany){
 			System.out.println(comp.getId() +' ' + comp.getName()+' ' + comp.getDescription() );
 		}
 		*/
 //		System.out.println("CompanyDao: Actualizando la compañia.");
-//		try {
-//			utx.begin();
-//			em.merge(entity);
-//			utx.commit();
-//		} catch (SecurityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalStateException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (RollbackException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (HeuristicMixedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (HeuristicRollbackException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SystemException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (NotSupportedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			utx.begin();
+			em.merge(entity);
+			utx.commit();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HeuristicMixedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void delete() {
@@ -107,7 +110,7 @@ public class CompanyDao {
 		em.remove(entity);
 	}
 
-	public Company findById(Long key) {
+	public Company findById(int key) {
 		return em.find(Company.class, key);
 	}
 
