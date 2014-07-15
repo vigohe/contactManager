@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -22,8 +20,8 @@ import javax.transaction.UserTransaction;
 
 import model.Company;
 
+@RequestScoped
 @Named
-@ViewScoped
 public class CompanyDao {
 
 	@PersistenceContext(unitName="primary")
@@ -34,11 +32,12 @@ public class CompanyDao {
 	
 	@Inject
 	private Company entity;
-	
-	private List<Company> listaCompany;
+
 	
 	public void create() {
 		System.out.println("CompanyDao: Creando la compañia.");
+		System.out.println(entity);
+		
 		try {
 			utx.begin();
 			em.persist(entity);
@@ -67,19 +66,13 @@ public class CompanyDao {
 		}
 	}
 
-	public void update(int id) {
-		System.out.println("CompanyDao: Actualizando la compañia.id: "+ id);
-		entity = this.findById(id);
-		System.out.println(entity.getId() +"," + entity.getName()+"," + entity.getDescription() );
+	public void update(Company company) {
+		System.out.println("CompanyDao: Actualizando la compañia");
+		System.out.println(company);
 		
-	/*	for( Company comp  :  listaCompany){
-			System.out.println(comp.getId() +' ' + comp.getName()+' ' + comp.getDescription() );
-		}
-		*/
-//		System.out.println("CompanyDao: Actualizando la compañia.");
 		try {
 			utx.begin();
-			em.merge(entity);
+			em.merge(company);
 			utx.commit();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -103,6 +96,9 @@ public class CompanyDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		
 	}
 
 	public void delete() {
@@ -129,12 +125,5 @@ public class CompanyDao {
 		return entity;
 	}
 
-	public List<Company> getListaCompany() {
-		return listaCompany;
-	}
-
-	public void setListaCompany(List<Company> listaCompany) {
-		this.listaCompany = listaCompany;
-	}
 	
 }

@@ -85,5 +85,8 @@ public class Company implements Serializable {
 
 		return contact;
 	}
-
+	
+	public String toString(){
+		return "{"+this.id+","+this.name+","+this.description+"}";
+	}
 }
