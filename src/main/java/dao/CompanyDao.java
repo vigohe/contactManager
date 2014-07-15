@@ -1,9 +1,13 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -18,6 +22,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import service.ListaServ;
 import model.Company;
 
 @RequestScoped
@@ -32,7 +37,9 @@ public class CompanyDao {
 	
 	@Inject
 	private Company entity;
-
+	
+	@Inject
+	private ListaServ listaServ;
 	
 	public void create() {
 		System.out.println("CompanyDao: Creando la compañia.");
@@ -124,6 +131,24 @@ public class CompanyDao {
 	public Company getEntity() {
 		return entity;
 	}
-
 	
+	public void agregarLista(Company company){
+		this.listaServ.listaAdd(company);
+		System.out.println(company);
+		System.out.println(listaServ);
+	}
+	
+	
+	public void prueba(){
+		System.out.println("PRUEBA");
+	}
+	
+	public void guardarLista(){
+		System.out.println("guardarLista");
+//		Iterator<Company> listaIter = this.listaServ.getListaUpd().iterator(); 
+//		
+//		while (listaIter.hasNext()) {
+//			System.out.println(listaIter.next());
+//		}
+	}
 }

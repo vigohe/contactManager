@@ -51,7 +51,7 @@
 					<h:outputText value="Nombre" />
 				</f:facet>
 				<rich:inplaceInput value="#{datos.name}" id="inputname">
-				<a4j:ajax event="change" listener="#{companyDao.update(datos)}" />  
+				<a4j:ajax event="change" listener="#{companyDao.agregarLista(datos)}" />  
 				</rich:inplaceInput>
 				
 			</rich:column>
@@ -67,7 +67,10 @@
                 <rich:dataScroller id="scroller" />
             </f:facet>
 		</rich:dataTable>
+<!-- 		<a4j:commandButton action="#{companyDao.prueba()}" value="Actualizar"></a4j:commandButton> -->
+		<h:commandButton action="#{companyDao.prueba()}" value="Actualizar" ></h:commandButton>
 	</rich:panel>
+	
 	</h:form>
 
 </h:body>
