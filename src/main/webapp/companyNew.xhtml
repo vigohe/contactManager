@@ -9,31 +9,10 @@
        xmlns:rich="http://richfaces.org/rich">
       
 <h:head>
-<title> Nueva Compañia</title>
+<title>Nueva Compañia</title>
 </h:head>
 <h:body>
 
-	<h:form id="form">
-		<rich:panel>
-			<f:facet name="header">
-			<h:outputLabel value="Agregar nueva Empresa" />
-			</f:facet>
-			<h:panelGrid columns="3" >
-				<h:outputText value="Nombre" />
-				<h:inputText value="#{companyDao.entity.name}" size="35" id="name">
-				<rich:validator />
-				</h:inputText>
-				<rich:message for="name" />
-				<h:outputText value="Descripcion" />
-				<h:inputTextarea value="#{companyDao.entity.description}" rows="3" cols="40" id="description">
-					<rich:validator />
-				</h:inputTextarea>
-				<rich:message for="description" />
-			</h:panelGrid>
-			<a4j:commandButton action="#{companyDao.create()}" render="tabla" value="Grabar"></a4j:commandButton>
-		</rich:panel>
-	</h:form>
-	
 	<h:form>
 	<rich:panel>
 		<f:facet name="header">
@@ -51,26 +30,40 @@
 					<h:outputText value="Nombre" />
 				</f:facet>
 				<rich:inplaceInput value="#{datos.name}" id="inputname">
-				<a4j:ajax event="change" listener="#{companyDao.agregarLista(datos)}" />  
+					<a4j:ajax event="change" listener="#{companyDao.setEditable(datos)}" render="@none" />  
 				</rich:inplaceInput>
-				
 			</rich:column>
 			<rich:column>
 				<f:facet name="header">
 					<h:outputText value="Descripción" />
 				</f:facet>
 				<rich:inplaceInput value="#{datos.description}">
-				<a4j:ajax event="change" listener="#{companyDao.update(datos)}" />  
+					<a4j:ajax event="change" listener="#{companyDao.setEditable(datos)}" render="@none" />  
 				</rich:inplaceInput>
 			</rich:column>
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="Eliminar" />
+				</f:facet>
+				<a4j:commandButton value="X" >
+		 			<a4j:ajax event="click" listener="#{companyDao.eliminarFila(datos)}" render="@form"/>
+				</a4j:commandButton>
+			</rich:column>
+			
             <f:facet name="footer">
                 <rich:dataScroller id="scroller" />
             </f:facet>
 		</rich:dataTable>
-<!-- 		<a4j:commandButton action="#{companyDao.prueba()}" value="Actualizar"></a4j:commandButton> -->
-		<h:commandButton action="#{companyDao.prueba()}" value="Actualizar" ></h:commandButton>
 	</rich:panel>
-	
+	<rich:panel>
+		<a4j:commandButton value="Actualizar" >
+ 			<a4j:ajax event="click" listener="#{companyDao.actualizarLista()}" render="@form"/>
+		</a4j:commandButton>
+		<a4j:commandButton value="Nueva Fila" >
+ 			<a4j:ajax event="click" listener="#{companyDao.nuevaFila()}" render="@form"/>
+		</a4j:commandButton>
+		
+	</rich:panel>
 	</h:form>
 
 </h:body>

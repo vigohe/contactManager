@@ -32,7 +32,10 @@ public class Company implements Serializable {
 	@Column(name="NAME", nullable=false, length=64)
 	@Size(min=3, max=12,message="Debe ser entre 3 y 12 carateres")
 	private String name;
-
+	
+	private boolean editable;
+	private boolean nuevo;
+	
 	//bi-directional many-to-one association to Contact
 	@OneToMany(mappedBy="company")
 	private List<Contact> contacts;
@@ -89,4 +92,21 @@ public class Company implements Serializable {
 	public String toString(){
 		return "{"+this.id+","+this.name+","+this.description+"}";
 	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+
+	public boolean isNuevo() {
+		return nuevo;
+	}
+
+	public void setNuevo(boolean nuevo) {
+		this.nuevo = nuevo;
+	}
+
 }

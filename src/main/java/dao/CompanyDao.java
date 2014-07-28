@@ -1,116 +1,44 @@
 package dao;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.ejb.Stateful;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
-import service.ListaServ;
 import model.Company;
 
-@RequestScoped
+@Stateless
 @Named
 public class CompanyDao {
 
 	@PersistenceContext(unitName="primary")
 	EntityManager em;
-
-	@Resource
-	private UserTransaction utx;
-	
-	@Inject
-	private Company entity;
-	
-	@Inject
-	private ListaServ listaServ;
-	
-	public void create() {
-		System.out.println("CompanyDao: Creando la compañia.");
-		System.out.println(entity);
 		
-		try {
-			utx.begin();
-			em.persist(entity);
-			utx.commit();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private List<Company> list;
+	
+	private List<Company> listDel = new ArrayList<Company>();
+	
+	public void create(Company company) {
+		System.out.println("CompanyDao: Creando la compañia.");
+		System.out.println(company);
+		em.persist(company);
 	}
-
+	
 	public void update(Company company) {
 		System.out.println("CompanyDao: Actualizando la compañia");
 		System.out.println(company);
-		
-		try {
-			utx.begin();
-			em.merge(company);
-			utx.commit();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
+
+		em.merge(company);
+
 	}
 
-	public void delete() {
-		// TODO Auto-generated method stub
-		em.remove(entity);
+	public void delete(Company company) {
+		em.remove(em.merge(company));
 	}
 
 	public Company findById(int key) {
@@ -118,37 +46,76 @@ public class CompanyDao {
 	}
 
 	public List<Company> listAll() {
-		CriteriaBuilder builder = em.getCriteriaBuilder();
-		CriteriaQuery<Company> criteria = builder.createQuery(Company.class);
-		Root<Company> companyRoot = criteria.from(Company.class);
-		criteria.select(companyRoot);
 		
-		List<Company> valueArray = em.createQuery(criteria).getResultList();
+		if(list==null){
+			CriteriaBuilder builder = em.getCriteriaBuilder();
+			CriteriaQuery<Company> criteria = builder.createQuery(Company.class);
+			Root<Company> companyRoot = criteria.from(Company.class);
+			criteria.select(companyRoot);
+			
+			list = em.createQuery(criteria).getResultList();
+		}
 		
-		return valueArray;
+		return list;
+	}
+	
+	public void actualizarLista(){
+		
+		for(Company company : listDel){
+			this.delete(company);
+		}	
+		
+		for(Company company : list){
+
+			if(company.isNuevo()){
+				this.create(company);
+			}else if(company.isEditable()){
+				this.update(company);
+			}
+			
+			company.setNuevo(false);
+			company.setEditable(false);
+		}
+		
+		listDel.clear();
+	}
+	
+	public void nuevaFila(){
+		Company company = new Company();
+		company.setNuevo(true);
+		list.add(company);
+	}
+	
+	public void eliminarFila(Company company){
+		
+		System.out.println("pre"+listDel);
+		listDel.add(company);
+		System.out.println("post"+listDel);
+		System.out.println(listDel);
+		if( list.remove(company) ){
+			System.out.println("Se quito de la lista " + company);
+		}
+	}
+	
+	public void setEditable(Company company){
+		company.setEditable(true);
 	}
 
-	public Company getEntity() {
-		return entity;
+	public List<Company> getList() {
+		return list;
 	}
-	
-	public void agregarLista(Company company){
-		this.listaServ.listaAdd(company);
-		System.out.println(company);
-		System.out.println(listaServ);
+
+	public void setList(List<Company> list) {
+		this.list = list;
 	}
-	
-	
-	public void prueba(){
-		System.out.println("PRUEBA");
+
+	public List<Company> getListDel() {
+		return listDel;
 	}
-	
-	public void guardarLista(){
-		System.out.println("guardarLista");
-//		Iterator<Company> listaIter = this.listaServ.getListaUpd().iterator(); 
-//		
-//		while (listaIter.hasNext()) {
-//			System.out.println(listaIter.next());
-//		}
+
+	public void setListDel(List<Company> listDel) {
+		this.listDel = listDel;
 	}
+
+
 }
