@@ -33,7 +33,7 @@ public class Company implements Serializable {
 	@Size(min=3, max=12,message="Debe ser entre 3 y 12 carateres")
 	private String name;
 
-	//bi-directional many-to-one association to Contact
+	//bi-directional many-to-one association to Contact prueba
 	@OneToMany(mappedBy="company")
 	private List<Contact> contacts;
 
@@ -84,6 +84,8 @@ public class Company implements Serializable {
 		contact.setCompany(null);
 
 		return contact;
+        
+
 	}
 	
 	public String toString(){
